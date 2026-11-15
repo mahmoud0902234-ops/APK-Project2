@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>InteriorX</title>
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#241f1a; --muted:#8a8177;
+    --line:#ece5db; --acc:#b0714f; --acc-soft:#f3e6dd; --ok:#3e7c4f;
+    --radius:16px; --shadow:0 2px 10px rgba(36,31,26,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+    background:var(--bg); color:var(--ink);
+    padding-bottom:76px;
+  }
+  /* ---------- header ---------- */
+  .appbar{
+    position:sticky; top:0; z-index:10;
+    background:linear-gradient(135deg,#2b2320,#4a3a31);
+    color:#fff; padding:18px 20px 16px;
+    border-radius:0 0 var(--radius) var(--radius);
+  }
+  .appbar .row{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-size:22px;font-weight:800;letter-spacing:.3px}
+  .logo span{color:#e0a882}
+  .appbar p{font-size:12.5px;color:#cfc4ba;margin-top:4px}
+  .iconbtn{
+    width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.1);color:#fff;font-size:17px;cursor:pointer;
+  }
+  /* ---------- pages ---------- */
+  main{padding:16px}
+  .page{display:none;animation:fade .25s ease}
+  .page.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .sec-title{font-size:17px;font-weight:700;margin:18px 2px 12px}
+  /* ---------- hero card ---------- */
+  .hero{
+    border-radius:var(--radius);padding:20px;color:#fff;box-shadow:var(--shadow);
+    background:linear-gradient(135deg,#b0714f 0%,#7d4f36 100%);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;left:-30px;top:-30px;width:130px;height:130px;
+    border-radius:50%;background:rgba(255,255,255,.12);
+  }
+  .hero h2{font-size:19px;margin-bottom:6px}
+  .hero p{font-size:13px;color:#f4e6dc;line-height:1.7}
+  .hero button{
+    margin-top:14px;border:none;background:#fff;color:#7d4f36;font-weight:700;
+    padding:10px 18px;border-radius:12px;font-size:13.5px;cursor:pointer;font-family:inherit;
+  }
+  /* ---------- search ---------- */
+  .search{
+    display:flex;align-items:center;gap:8px;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:14px;
+    color:var(--muted);font-size:13.5px;box-shadow:var(--shadow);
+  }
+  /* ---------- cards ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{
+    background:var(--card);border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow);border:1px solid var(--line);cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .card:active{transform:scale(.97)}
+  .card .thumb{height:104px;position:relative}
+  .card .thumb .tag{
+    position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);
+    font-size:10.5px;font-weight:700;color:#5b4638;padding:4px 9px;border-radius:99px;
+  }
+  .card .body{padding:10px 12px 12px}
+  .card h3{font-size:13.5px;font-weight:700}
+  .card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+  .card .price{font-size:13px;font-weight:800;color:var(--acc)}
+  .card .stars{font-size:11px;color:#d99a2b}
+  /* ---------- chips ---------- */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;padding:8px 16px;border-radius:99px;font-size:12.5px;font-weight:600;
+    background:var(--card);border:1px solid var(--line);color:var(--muted);cursor:pointer;font-family:inherit;
+  }
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  /* ---------- calculator ---------- */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--shadow);
+  }
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px}
+  .field select,.field input{
+    width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);
+    font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink);outline:none;
+  }
+  .field select:focus,.field input:focus{border-color:var(--acc)}
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .lvl{
+    padding:10px 4px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);
+    font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;font-family:inherit;
+  }
+  .lvl.on{border-color:var(--acc);background:var(--acc-soft);color:var(--acc)}
+  .btn{
+    width:100%;padding:14px;border:none;border-radius:14px;background:var(--ink);color:#fff;
+    font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .btn.soft{background:var(--acc-soft);color:var(--acc);margin-top:10px}
+  .result{
+    display:none;margin-top:14px;background:linear-gradient(135deg,#2b2320,#4a3a31);
+    border-radius:14px;padding:16px;color:#fff;
+  }
+  .result.show{display:block;animation:fade .3s ease}
+  .result .big{font-size:26px;font-weight:800;margin-top:4px}
+  .result small{color:#cfc4ba;font-size:11.5px}
+  .hist{margin-top:10px}
+  .hist-item{
+    display:flex;justify-content:space-between;align-items:center;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px;font-size:13px;
+  }
+  .hist-item b{color:var(--acc)}
+  .empty{color:var(--muted);font-size:12.5px;text-align:center;padding:14px}
+  /* ---------- detail sheet ---------- */
+  .sheet{
+    position:fixed;inset:0;z-index:50;display:none;
+  }
+  .sheet.open{display:block}
+  .sheet .dim{position:absolute;inset:0;background:rgba(20,15,12,.5)}
+  .sheet .box{
+    position:absolute;bottom:0;left:0;right:0;background:var(--card);
+    border-radius:22px 22px 0 0;padding:20px;max-height:82%;overflow-y:auto;
+    animation:up .3s ease;
+  }
+  @keyframes up{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+  .box .art{height:150px;border-radius:16px;margin-bottom:14px}
+  .box h2{font-size:18px;margin-bottom:6px}
+  .box p{font-size:13px;color:var(--muted);line-height:1.8}
+  .box .row2{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .box .p{font-size:20px;font-weight:800;color:var(--acc)}
+  /* ---------- more ---------- */
+  .list{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  .list .item{
+    display:flex;align-items:center;gap:12px;padding:15px 16px;font-size:13.5px;font-weight:600;
+    border-bottom:1px solid var(--line);cursor:pointer;
+  }
+  .list .item:last-child{border-bottom:none}
+  .list .item .ic{
+    width:34px;height:34px;border-radius:10px;background:var(--acc-soft);color:var(--acc);
+    display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 auto;
+  }
+  .list .item .arr{margin-right:auto;color:var(--muted)}
+  /* ---------- bottom nav ---------- */
+  nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:20;
+    background:var(--card);border-top:1px solid var(--line);
+    display:flex;padding:8px 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  nav button{
+    flex:1;background:none;border:none;font-family:inherit;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--muted);font-size:10.5px;font-weight:600;padding:6px 0;border-radius:12px;
+  }
+  nav button .ni{font-size:19px}
+  nav button.on{color:var(--acc)}
+  /* ---------- toast ---------- */
+  #toast{
+    position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:13px;
+    opacity:0;pointer-events:none;transition:all .3s ease;z-index:99;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="row">
+    <div>
+      <div class="logo">Interior<span>X</span></div>
+      <p>صمّم بيتك بذوق… وبحساب</p>
+    </div>
+    <button class="iconbtn" onclick="toast('لا توجد إشعارات جديدة')">&#128276;</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HOME ============ -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <h2>خصم 20% على تصاميم الصالونات</h2>
+      <p>اطلب تصميم غرفة معيشتك من نخبة المصممين، واستلم 3D خلال 72 ساعة.</p>
+      <button onclick="showPage('designs')">تصفح التصاميم</button>
+    </div>
+
+    <div class="search">&#128269; ابحث عن تصميم، غرفة، أو طراز…</div>
+
+    <h2 class="sec-title">الأكثر طلباً</h2>
+    <div class="grid" id="homeGrid"></div>
+  </section>
+
+  <!-- ============ DESIGNS ============ -->
+  <section class="page" id="page-designs">
+    <h2 class="sec-title" style="margin-top:4px">تصاميمنا</h2>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="designGrid"></div>
+  </section>
+
+  <!-- ============ CALC ============ -->
+  <section class="page" id="page-calc">
+    <h2 class="sec-title" style="margin-top:4px">حاسبة التشطيب</h2>
+    <div class="panel">
+      <div class="field">
+        <label>نوع الغرفة</label>
+        <select id="cRoom">
+          <option value="معيشة">غرفة معيشة</option>
+          <option value="نوم">غرفة نوم</option>
+          <option value="مطبخ">مطبخ</option>
+          <option value="حمام">حمام</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>المساحة (م²)</label>
+        <input id="cArea" type="number" inputmode="decimal" min="1" placeholder="مثال: 25">
+      </div>
+      <div class="field">
+        <label>مستوى التشطيب</label>
+        <div class="levels" id="levels">
+          <button class="lvl" data-rate="350">اقتصادي</button>
+          <button class="lvl on" data-rate="600">متوسط</button>
+          <button class="lvl" data-rate="1000">فاخر</button>
+        </div>
+      </div>
+      <button class="btn" onclick="calc()">احسب التكلفة</button>
+      <div class="result" id="result">
+        <small>التكلفة التقديرية</small>
+        <div class="big" id="resVal"></div>
+        <small id="resNote"></small>
+      </div>
+    </div>
+
+    <h2 class="sec-title">حساباتك المحفوظة</h2>
+    <div class="hist" id="hist"></div>
+    <button class="btn soft" onclick="clearHist()" style="margin-top:6px">مسح السجل</button>
+  </section>
+
+  <!-- ============ MORE ============ -->
+  <section class="page" id="page-more">
+    <h2 class="sec-title" style="margin-top:4px">المزيد</h2>
+    <div class="list">
+      <div class="item" onclick="toast('الإصدار 1.0.0')">
+        <div class="ic">&#128172;</div> تواصل معنا <span class="arr">&#8249;</span>
+      </div>
+      <div class="item" onclick="toast('سيتم توفيرها قريباً')">
+        <div class="ic">&#128737;</div> سياسة الخصوصية <span class="arr">&#8249;</span>
+      </div>
+      <div class="item" onclick="toast('قيّمنا 5 نجوم &#128525;')">
+        <div class="ic">&#11088;</div> قيّم التطبيق <span class="arr">&#8249;</span>
+      </div>
+      <div class="item" onclick="toast('InteriorX — الإصدار 1.0.0')">
+        <div class="ic">&#8505;</div> عن التطبيق <span class="arr">&#8249;</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- bottom nav -->
+<nav>
+  <button class="on" data-p="home"><span class="ni">&#127968;</span>الرئيسية</button>
+  <button data-p="designs"><span class="ni">&#128444;</span>التصاميم</button>
+  <button data-p="calc"><span class="ni">&#128425;</span>الحاسبة</button>
+  <button data-p="more"><span class="ni">&#9776;</span>المزيد</button>
+</nav>
+
+<!-- detail sheet -->
+<div class="sheet" id="sheet">
+  <div class="dim" onclick="closeSheet()"></div>
+  <div class="box" id="sheetBox"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ================= data ================= */
+var designs = [
+  {id:1,name:'صالون نيو كلاسيك',cat:'معيشة',price:18500,stars:'4.9',art:'linear-gradient(135deg,#d9b48f,#8c5a3c)',desc:'صالون بلمسة كلاسيكية حديثة: كنب مخملي بيج، طاولة رخام، وإضاءة دافئة مخفية.'},
+  {id:2,name:'غرفة نوم سكاندي',cat:'نوم',price:14200,stars:'4.8',art:'linear-gradient(135deg,#e8e0d5,#a89a86)',desc:'هدوء الاسكندنافية: خشب فاتح، ألوان محايدة، وفرش قطني طبيعي مريح.'},
+  {id:3,name:'مطبخ مودرن أبيض',cat:'مطبخ',price:26800,stars:'5.0',art:'linear-gradient(135deg,#f0ece6,#9aa3a8)',desc:'مطبخ عملي بخزائن لا-لمس، سطح كوارتز، وإضاءة LED أسفل الخزائن.'},
+  {id:4,name:'حمام سبا فندقي',cat:'حمام',price:9400,stars:'4.7',art:'linear-gradient(135deg,#cfd8d3,#6d7f78)',desc:'بلاط بورسلين بملمس حجري، دش مطري، ومرايا مضيئة بإطار نحاسي.'},
+  {id:5,name:'معيشة مينيمال',cat:'معيشة',price:15800,stars:'4.8',art:'linear-gradient(135deg,#ded5c8,#7d7466)',desc:'أقل الأشياء وأكثرها أناقة: خطوط نظيفة ومساحات مفتوحة وإضاءة طبيعية.'},
+  {id:6,name:'غرفة نوم مودرن داكن',cat:'نوم',price:16900,stars:'4.9',art:'linear-gradient(135deg,#5a4a40,#2e2620)',desc:'فخامة الألوان الداكنة: خشب الجوز، إضاءة معلقة، وخلفية سرير مخملية.'}
+];
+var cats = ['الكل','معيشة','نوم','مطبخ','حمام'];
+var fmt = function(n){return n.toLocaleString('en-US')+' ج.م'};
+
+/* ================= render ================= */
+function cardHTML(d){
+  return '<div class="card" onclick="openSheet('+d.id+')">'+
+    '<div class="thumb" style="background:'+d.art+'"><span class="tag">'+d.cat+'</span></div>'+
+    '<div class="body"><h3>'+d.name+'</h3>'+
+    '<div class="meta"><span class="price">'+fmt(d.price)+'</span>'+
+    '<span class="stars">&#9733; '+d.stars+'</span></div></div></div>';
+}
+function renderHome(){
+  document.getElementById('homeGrid').innerHTML = designs.slice(0,4).map(cardHTML).join('');
+}
+function renderDesigns(filter){
+  var list = filter && filter!=='الكل' ? designs.filter(function(d){return d.cat===filter}) : designs;
+  document.getElementById('designGrid').innerHTML = list.map(cardHTML).join('');
+}
+function renderChips(){
+  document.getElementById('chips').innerHTML = cats.map(function(c,i){
+    return '<button class="chip'+(i===0?' on':'')+'" onclick="pickChip(this,\''+c+'\')">'+c+'</button>';
+  }).join('');
+}
+function pickChip(el,cat){
+  document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on')});
+  el.classList.add('on'); renderDesigns(cat);
+}
+
+/* ================= sheet ================= */
+function openSheet(id){
+  var d = designs.find(function(x){return x.id===id});
+  document.getElementById('sheetBox').innerHTML =
+    '<div class="art" style="background:'+d.art+'"></div>'+
+    '<h2>'+d.name+'</h2><p>'+d.desc+'</p>'+
+    '<div class="row2"><span class="p">'+fmt(d.price)+'</span>'+
+    '<button class="btn" style="width:auto;padding:11px 22px" onclick="order('+d.id+')">اطلب التصميم</button></div>';
+  document.getElementById('sheet').classList.add('open');
+}
+function closeSheet(){document.getElementById('sheet').classList.remove('open')}
+function order(id){
+  closeSheet();
+  var d = designs.find(function(x){return x.id===id});
+  toast('تم استلام طلب "'+d.name+'" بنجاح');
+}
+
+/* ================= nav ================= */
+function showPage(p){
+  document.querySelectorAll('.page').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('nav button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.p===p);
+  });
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('nav button').forEach(function(b){
+  b.addEventListener('click', function(){showPage(b.dataset.p)});
+});
+
+/* ================= calculator ================= */
+var rate = 600;
+document.querySelectorAll('#levels .lvl').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('#levels .lvl').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on'); rate = +b.dataset.rate;
+  });
+});
+function calc(){
+  var area = parseFloat(document.getElementById('cArea').value);
+  var room = document.getElementById('cRoom').value;
+  if(!area || area<=0){ toast('اكتب المساحة الأول'); return; }
+  var total = Math.round(area * rate);
+  var lvlTxt = document.querySelector('#levels .lvl.on').textContent;
+  document.getElementById('resVal').textContent = fmt(total);
+  document.getElementById('resNote').textContent = room+' • '+lvlTxt+' • '+area+' م²';
+  document.getElementById('result').classList.add('show');
+  saveHist(room, area, total);
+}
+function saveHist(room, area, total){
+  var h = JSON.parse(localStorage.getItem('ix_hist')||'[]');
+  h.unshift({room:room, area:area, total:total, t:Date.now()});
+  localStorage.setItem('ix_hist', JSON.stringify(h.slice(0,10)));
+  renderHist();
+}
+function renderHist(){
+  var h = JSON.parse(localStorage.getItem('ix_hist')||'[]');
+  var box = document.getElementById('hist');
+  if(!h.length){ box.innerHTML = '<div class="empty">لا توجد حسابات محفوظة بعد</div>'; return; }
+  box.innerHTML = h.map(function(x){
+    return '<div class="hist-item"><span>'+x.room+' — '+x.area+' م²</span><b>'+fmt(x.total)+'</b></div>';
+  }).join('');
+}
+function clearHist(){
+  localStorage.removeItem('ix_hist'); renderHist(); toast('تم مسح السجل');
+}
+
+/* ================= toast ================= */
+var tTimer;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.innerHTML = msg; t.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(function(){t.classList.remove('show')}, 2200);
+}
+
+/* ================= init ================= */
+renderHome(); renderChips(); renderDesigns('الكل'); renderHist();
+</script>
+</body>
+</html>
